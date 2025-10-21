@@ -1,4 +1,4 @@
-<h3 align="center">Toolsay</h3>
+<h3 align="center">dotnetsay</h3>
 
 <p align="center"> A platform-specific .NET SDK Tool demonstrating the use of .NET 10 preview 6 features
     <br> 
@@ -36,8 +36,8 @@ These instructions will get you a copy of the project up and running on your loc
 To use the tool, use the new `dnx` command to run the tool from the command line. This will download and run the latest version of the tool, which will echo back the input text as ASCII art.
 
 ```bash
-> dnx toolsay "Hello, World!"
-Tool package toolsay@1.0.0 will be downloaded from source <source>.
+> dnx dotnetsay "Hello, World!"
+Tool package dotnetsay@1.0.0 will be downloaded from source <source>.
 Proceed? [y/n] (y): y
   _   _          _   _                __        __                 _       _   _
  | | | |   ___  | | | |   ___         \ \      / /   ___    _ __  | |   __| | | |
@@ -49,17 +49,17 @@ Proceed? [y/n] (y): y
 
 ## 🚀 Packaging <a name = "deployment"></a>
 
-The framework-dependent version of the tool, which will run on any system that has .NET 10 preview 6 runtimes installed, can be packaged using the `dotnet pack` command on the `toolsay` project. This will create a NuGet package in `./artifacts/package` that can be distributed and installed using the `dnx` command. If you're testing the local build of the package, you can use the `--source` option to specify the local path to the package.
+The framework-dependent version of the tool, which will run on any system that has .NET 10 preview 6 runtimes installed, can be packaged using the `dotnet pack` command on the `dotnetsay` project. This will create a NuGet package in `./artifacts/package` that can be distributed and installed using the `dnx` command. If you're testing the local build of the package, you can use the `--source` option to specify the local path to the package.
 
 ```bash
-> dotnet pack toolsay
+> dotnet pack dotnetsay
 Restore complete (0.6s)
 You are using a preview version of .NET. See: https://aka.ms/dotnet-support-policy
-  toolsay net10.0 succeeded (0.2s) → artifacts\publish\toolsay\release\
-  toolsay succeeded (3.4s) → artifacts\bin\toolsay\release\toolsay.dll
+  dotnetsay net10.0 succeeded (0.2s) → artifacts\publish\dotnetsay\release\
+  dotnetsay succeeded (3.4s) → artifacts\bin\dotnetsay\release\dotnetsay.dll
 
 Build succeeded in 4.5s
-> dotnet tool exec --source .\artifacts\package\ toolsay "Hello, World!"
+> dotnet tool exec --source .\artifacts\package\ dotnetsay "Hello, World!"
   _   _          _   _                __        __                 _       _   _
  | | | |   ___  | | | |   ___         \ \      / /   ___    _ __  | |   __| | | |
  | |_| |  / _ \ | | | |  / _ \         \ \ /\ / /   / _ \  | '__| | |  / _` | | |

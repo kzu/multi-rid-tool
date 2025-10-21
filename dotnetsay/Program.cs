@@ -5,7 +5,7 @@ using System.CommandLine;
 class Program
 {
     // Create an ActivitySource for tracing
-    private static readonly ActivitySource ActivitySource = new("ToolSay.Application", "1.0.0");
+    private static readonly ActivitySource ActivitySource = new("dotnetsay.Application", "1.0.0");
     private static readonly Command rootCommand = new RootCommand("A simple tool to convert text to ASCII art using Figlet and OpenTelemetry for tracing.")
     {
         new Argument<string>("input")
@@ -39,8 +39,8 @@ class Program
         {
             AnsiConsole.MarkupLine("[red]No input provided.[/]");
             AnsiConsole.MarkupLine("[white]Usage:[/]");
-            AnsiConsole.MarkupLine("[white]\ttoolsay \"Your text here\"[/]");
-            AnsiConsole.MarkupLine("[white]\techo \"Your text here\" | toolsay[/]");
+            AnsiConsole.MarkupLine("[white]\tdotnetsay \"Your text here\"[/]");
+            AnsiConsole.MarkupLine("[white]\techo \"Your text here\" | dotnetsay[/]");
 
             return;
         }

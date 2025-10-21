@@ -11,8 +11,8 @@
     <CopyOutputSymbolsToPublishDirectory>false</CopyOutputSymbolsToPublishDirectory>
     <!-- .NET Tool properties -->
     <PackAsTool>true</PackAsTool>
-    <ToolCommandName>toolsay</ToolCommandName>
-    <PackageId>toolsay</PackageId>
+    <ToolCommandName>dotnetsay</ToolCommandName>
+    <PackageId>dotnetsay</PackageId>
     <PackageVersion>1.0.0</PackageVersion>
     <Authors>Chet Husk</Authors>
     <Description>A .NET tool that converts text to ASCII art using Spectre.Console</Description>

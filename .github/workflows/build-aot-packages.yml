@@ -34,7 +34,7 @@ jobs:
       uses: actions/setup-dotnet@v4
 
     - name: Build AOT package for ${{ matrix.rid }}
-      run: dotnet pack toolsay/toolsay.csproj -p:ToolType=aot --use-current-runtime
+      run: dotnet pack dotnetsay/dotnetsay.csproj -p:ToolType=aot --use-current-runtime
 
     - name: Upload platform-specific package
       uses: actions/upload-artifact@v4
@@ -54,7 +54,7 @@ jobs:
       uses: actions/setup-dotnet@v4
 
     - name: Build agnostic AOT package
-      run: dotnet pack toolsay/toolsay.csproj -p:ToolType=aot
+      run: dotnet pack dotnetsay/dotnetsay.csproj -p:ToolType=aot
 
     - name: Upload agnostic package
       uses: actions/upload-artifact@v4

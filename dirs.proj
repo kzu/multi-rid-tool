@@ -3,7 +3,7 @@
     <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="toolsay\toolsay.csproj" />
+    <ProjectReference Include="dotnetsay\dotnetsay.csproj" />
   </ItemGroup>
 
   <Target Name="ReallyClean">
