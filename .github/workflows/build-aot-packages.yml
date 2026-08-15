@@ -1,3 +1,6 @@
+# Builds AOT tool packages for each RID plus the agnostic pointer package.
+# Pushes CI feed if secrets.SLEET_CONNECTION is provided.
+
 name: Build AOT Tool Packages
 
 on:
@@ -5,6 +8,9 @@ on:
   pull_request:
     branches: [ main ]
   workflow_dispatch:
+
+env:
+  SLEET_FEED_URL: ${{ vars.SLEET_FEED_URL }}
 
 jobs:
   build-platform-specific:
@@ -67,6 +73,8 @@ jobs:
   collect-all-packages:
     needs: [build-platform-specific, build-agnostic]
     runs-on: ubuntu-latest
+    env:
+      SLEET_CONNECTION: ${{ secrets.SLEET_CONNECTION }}
 
     steps:
     - name: Download all artifacts
@@ -88,3 +96,46 @@ jobs:
         path: collected-packages/**/*.nupkg
         retention-days: 90
         if-no-files-found: error
+
+    - name: Setup .NET
+      if: env.SLEET_CONNECTION != ''
+      uses: actions/setup-dotnet@v4
+
+    - name: Publish packages to CI feed
+      if: env.SLEET_CONNECTION != ''
+      shell: pwsh
+      run: |
+        $packages = @(Get-ChildItem collected-packages -Recurse -Filter *.nupkg | Where-Object Name -NotLike '*.symbols.nupkg' | Sort-Object Name)
+        $runtimePackagePattern = '\.(win-x64|win-arm64|linux-x64|linux-arm64|osx-x64|osx-arm64)\..+\.nupkg$'
+        $runtimePackages = @($packages | Where-Object Name -Match $runtimePackagePattern)
+        $pointerPackages = @($packages | Where-Object Name -NotMatch $runtimePackagePattern)
+
+        if ($packages.Count -eq 0) { throw 'No packages found.' }
+
+        $runtimePath = Join-Path $env:RUNNER_TEMP runtime-packages
+        $pointerPath = Join-Path $env:RUNNER_TEMP pointer-package
+        New-Item -ItemType Directory -Force -Path $runtimePath, $pointerPath | Out-Null
+
+        if ($runtimePackages.Count -gt 0) {
+          Copy-Item -Path $runtimePackages.FullName -Destination $runtimePath
+        }
+        if ($pointerPackages.Count -gt 0) {
+          Copy-Item -Path $pointerPackages.FullName -Destination $pointerPath
+        }
+
+        $sleetVersion = $null
+        if ($env:SLEET_FEED_URL) {
+          $sleetVersion = (Invoke-RestMethod -Uri $env:SLEET_FEED_URL).'sleet:version'
+        }
+        if ($sleetVersion) {
+          dotnet tool update sleet -g --allow-downgrade --version $sleetVersion
+        } else {
+          dotnet tool update sleet -g --allow-downgrade
+        }
+
+        if ($runtimePackages.Count -gt 0) {
+          sleet push $runtimePath --config none -f --verbose -p "SLEET_FEED_CONTAINER=nuget" -p "SLEET_FEED_CONNECTIONSTRING=$env:SLEET_CONNECTION" -p "SLEET_FEED_TYPE=azure"
+        }
+        if ($pointerPackages.Count -gt 0) {
+          sleet push $pointerPath --config none -f --verbose -p "SLEET_FEED_CONTAINER=nuget" -p "SLEET_FEED_CONNECTIONSTRING=$env:SLEET_CONNECTION" -p "SLEET_FEED_TYPE=azure"
+        }
