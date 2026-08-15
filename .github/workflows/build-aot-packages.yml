@@ -41,7 +41,7 @@ jobs:
 
     - name: Install native VS workload
       if: runner.os == 'Windows'
-      run: dnx --yes vs -- install --sku build +vc --quiet --wait
+      run: dnx --yes vs -- install --sku build +vc --quiet --wait --add Microsoft.VisualStudio.Component.VC.Tools.ARM64
 
     - name: Build AOT package for ${{ matrix.rid }}
       run: dotnet pack dotnetsay/dotnetsay.csproj -p:ToolType=aot --use-current-runtime
