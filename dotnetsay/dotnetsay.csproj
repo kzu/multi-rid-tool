@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
 
-    <GenerateNuspecDependsOn>CheckToolTypesThatDoNotWorkForPreview6;CheckToolTypeIsValid;$(GenerateNuspecDependsOn);</GenerateNuspecDependsOn>
+    <GenerateNuspecDependsOn>CheckToolTypeIsValid;$(GenerateNuspecDependsOn);</GenerateNuspecDependsOn>
     <CopyOutputSymbolsToPublishDirectory>false</CopyOutputSymbolsToPublishDirectory>
     <!-- .NET Tool properties -->
     <PackAsTool>true</PackAsTool>
@@ -28,11 +28,11 @@
   </ItemGroup>
 
   <PropertyGroup Condition="'$(ToolType)' == 'agnostic' Or '$(ToolType)' == ''">
-    <!-- This is the default variation, which will run on any system that has .NET 10 preview 6 runtimes installed. -->
+    <!-- This is the default variation, which will run on any system that has the .NET 10 runtime installed. -->
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(ToolType)' == 'specific'">
-    <!-- This variation will run on any system that has .NET 10 preview 6 runtimes installed, but it will only run on the specific platform it was built for. -->
+    <!-- This variation will run on any system that has the .NET 10 runtime installed, but it will only run on the specific platform it was built for. -->
     <!-- This may not actually work? -->
     <RuntimeIdentifiers>$(_TestingRIDs)</RuntimeIdentifiers>
   </PropertyGroup>
@@ -59,11 +59,6 @@
 
   <Target Name="CheckToolTypeIsValid">
     <Error Condition="'@(ToolType)' != '' and ('$(ToolType)' != 'agnostic' And '$(ToolType)' != 'specific' And '$(ToolType)' != 'self-contained' And '$(ToolType)' != 'trimmed' And '$(ToolType)' != 'aot')" Text="Invalid ToolType value: $(ToolType). Valid values are agnostic, specific, self-contained, trimmed, aot." />
-  </Target>
-
-  <Target Name="CheckToolTypesThatDoNotWorkForPreview6" Condition="$(NetCoreSDKVersion.StartsWith('10.0.100-preview.6'))">
-    <!-- <Error Condition="'$(ToolType)' == 'specific'" Text="Framework-dependent, platform-specific Tools doesn't work for .NET 10 preview 6, see https://github.com/dotnet/sdk/issues/49494 for details." /> -->
-    <Error Condition="'$(ToolType)' == 'trimmed'" Text="Trimmed tools don't work for .NET 10 preview 6, see https://github.com/dotnet/sdk/issues/49493 for details." />
   </Target>
 
   <!-- TODO: log the fact that this doesn't work today as a bug in the SDK/NuGet. -->
